@@ -26,16 +26,18 @@ start(Host) ->
   gen_server:start({local, ?MODULE}, ?MODULE, [Host,20738], []).
 
 call(Method,Args) ->
-    case gen_server:call(?MODULE, {call, Method, Args}) of
+    case gen_server:call(?MODULE, {call, Method, Args}, 10000) of
         {ok, {response, [N]}} ->
             {ok, N}
     end.
 
 callv(Method,Args) ->
-    case gen_server:call(?MODULE, {call, Method, Args}) of
+    case gen_server:call(?MODULE, {call, Method, Args}, 10000) of
         {ok, {response, [0]}} ->
             ok;
         {ok, {response, [-1]}} ->
+            error;
+        {error, timeout} ->
             error
     end.
 

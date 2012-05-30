@@ -6,6 +6,11 @@
 
 -export([start/0, stop/0, run/0]).
 
+
+-define(PORT_COLOR, {0,255,0}).
+-define(PID_COLOR, {255,0,0}).
+-define(NAMED_COLOR, {0,0,255}).
+
 run() ->
     erlubi:start(),
     erlubi:clear(),
@@ -31,7 +36,9 @@ init([]) ->
     State1 = lists:foldl(fun init_pid/2, State0, erlang:processes()),
     State2 = lists:foldl(fun init_pid/2, State1, erlang:ports()),
 
-    erlang:trace(all, true, [procs, call]),
+    erlang:trace(all, true, [procs,call]),
+    erlang:trace(self(), false, [all]),
+    erlang:trace(whereis(erlubi), false, [all]),
 
     erlang:trace_pattern({erlang, monitor, 2}, [{['_','_'],[],[{return_trace}]}], []),
     erlang:trace_pattern({erlang, demonitor, 1}, true, []),
@@ -51,10 +58,10 @@ init_pid(PID,State) ->
 init_pid_label(PID,Vertex,State) when is_pid(PID) ->
     case catch erlang:process_info(PID, registered_name) of
         {registered_name, Name} ->
-            Vertex:color({0,0,255}),
+            Vertex:color(?NAMED_COLOR),
             ok = Vertex:label(atom_to_list(Name));
         _ ->
-            ok
+            ok = Vertex:label(PID)
     end,
     State;
 
@@ -63,7 +70,7 @@ init_pid_label(Port,Vertex, State) when is_port(Port) ->
         {name, Name} ->
             ok = Vertex:label(Name);
         _ ->
-            ok
+            ok = Vertex:label(Port)
     end,
     State.
 
@@ -108,20 +115,21 @@ handle_info({trace, PID, exit, _Reason}, State= #state{ pdict=PDict }) ->
         {ok, #process{ vertex=V }} ->
             V:remove(),
             {noreply, State#state{ pdict=dict:erase(PID, PDict) }};
-        _ ->
+        _Result ->
+            io:format("process unknown ~p~n", [_Result]),
             {noreply, State}
     end;
 
 handle_info({trace, PID, register, Name}, State) ->
     {V, State2} = vertex(PID, State),
-    V:color({0,0,255}),
+    V:color(?NAMED_COLOR),
     V:label(Name),
     {noreply, State2};
 
 handle_info({trace, PID, unregister, _Name}, State) ->
     {V, State2} = vertex(PID, State),
-    V:color({255,0,0}),
-    V:label(""),
+    V:color(?PID_COLOR),
+    V:label(PID),
     {noreply, State2};
 
 handle_info({trace, PID1, link, PID2}, State) ->
@@ -191,9 +199,10 @@ vertex(PID, State=#state{ pdict=PDict }) ->
         error ->
             {ok, V} = erlubi:vertex(),
             if is_pid(PID) ->
-                    V:color({255,0,0});
+                    V:shape(sphere),
+                    V:color(?PID_COLOR);
                is_port(PID) ->
-                    V:color({0,255,0})
+                    V:color(?PORT_COLOR)
             end,
             {V, State#state{ pdict=dict:store(PID, #process{ vertex=V }, PDict) }}
     end.
