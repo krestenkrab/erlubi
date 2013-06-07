@@ -8,7 +8,7 @@ To use,
 - Grab a copy of `erlubi` from github `git clone git://github.com/krestenkrab/erlubi.git`
 - Compile `erlubi` using `./rebar get-deps; ./rebar compile`
 - Run erlang with `-pa erlubi/ebin -pa erlubi/deps/xmlrpc/ebin` on the command line
-- (alternatively, you can instead directly type `code:addpathsa(["erlubi/ebin","erlubi/deps/xmlrpc/ebin"])` inside the shell)
+- (alternatively, you can instead directly type `code:add_pathsa(["erlubi/ebin","erlubi/deps/xmlrpc/ebin"])` inside the shell)
 - Launch the visualizer/tracer using `erlubi_tracer:run()` inside your erlang shell.
 
 Now `erlubi_tracer` will first build a structure corresponding to present processes in your VM, and then install erlang trace hooks to receive notifications of new Erlang processes and links being created.
