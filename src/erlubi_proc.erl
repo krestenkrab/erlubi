@@ -32,7 +32,7 @@ show() ->
                           case catch erlang:process_info(PID, links) of
                               {links, LinkList} ->
                                   lists:foreach(fun(PID2) when PID<PID2 ->
-                                                        {ok, E} = erlubi:edge(Vpid, dict:fetch(PID2, Dict)),
+                                                        {ok, _E} = erlubi:edge(Vpid, dict:fetch(PID2, Dict)),
                                                         ok;
                                                    (_) ->
                                                         ok

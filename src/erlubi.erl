@@ -71,11 +71,11 @@ clear() ->
 
 vertex() ->
     {ok, N} = call('ubigraph.new_vertex', []),
-    {ok, {erlubi_vertex, N}}.
+    {ok, erlubi_vertex:new(N)}.
 
-edge({erlubi_vertex, V1}, {erlubi_vertex, V2}) ->
+edge({erlubi_vertex, [V1]}, {erlubi_vertex, [V2]}) ->
     {ok, E} = call('ubigraph.new_edge', [V1, V2]),
-    {ok, {erlubi_edge, E}}.
+    {ok, erlubi_edge:new(E)}.
 
 remove_vertex({erlubi_vertex, V}) ->
     callv('ubigraph.remove_vertex', [V]).
