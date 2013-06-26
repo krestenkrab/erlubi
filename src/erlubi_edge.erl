@@ -19,44 +19,47 @@
 %%
 %% ----------------------------------------------------------------------------
 
--module(erlubi_edge, [ID]).
+-module(erlubi_edge).
 
--export([id/0]).
+-export([new/1, id/1]).
 
--export([remove/0, arrow/1, arrow_position/1, spline/1, stroke/1, visible/1]).
+-export([remove/1, arrow/2, arrow_position/2, spline/2, stroke/2, visible/2]).
 
-id() ->
+new(ID) ->
+    {?MODULE, [ID]}.
+
+id({?MODULE, [ID]}) ->
     ID.
 
-remove() ->
+remove({?MODULE, [ID]}) ->
     erlubi:callv('ubigraph.remove_edge', [ID]).
 
 
-set(Att,Value) ->
+set(Att, Value, {?MODULE, [ID]}) ->
     erlubi:callv('ubigraph.set_edge_attribute',
                  [ID,
                   erlubi_util:to_string(Att),
                   erlubi_util:to_string(Value)]).
 
 
-arrow(Boolean) when is_boolean(Boolean) ->
-    set("arrow", Boolean).
+arrow(Boolean, {?MODULE, [_ID]}=THIS) when is_boolean(Boolean) ->
+    set("arrow", Boolean, THIS).
 
-arrow_position(Where) when 0.0 =< Where, Where =< 1.0 ->
-    set("arrow_position", lists:flatten( io_lib:format("~f", [Where]))).
+arrow_position(Where, {?MODULE, [_ID]}=THIS) when 0.0 =< Where, Where =< 1.0 ->
+    set("arrow_position", lists:flatten( io_lib:format("~f", [Where])), THIS).
 
-spline(Boolean) when is_boolean(Boolean) ->
-    set("spline", Boolean).
+spline(Boolean, {?MODULE, [_ID]}=THIS) when is_boolean(Boolean) ->
+    set("spline", Boolean, THIS).
 
-stroke(solid) ->
-    set("stroke", "solid");
-stroke(dashed) ->
-    set("stroke", "dashed");
-stroke(none) ->
-    set("stroke", "none").
+stroke(solid, {?MODULE, [_ID]}=THIS) ->
+    set("stroke", "solid", THIS);
+stroke(dashed, {?MODULE, [_ID]}=THIS) ->
+    set("stroke", "dashed", THIS);
+stroke(none, {?MODULE, [_ID]}=THIS) ->
+    set("stroke", "none", THIS).
 
-visible(Boolean) when is_boolean(Boolean) ->
-    set("visible", Boolean).
+visible(Boolean, {?MODULE, [_ID]}=THIS) when is_boolean(Boolean) ->
+    set("visible", Boolean, THIS).
 
 
 
