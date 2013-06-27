@@ -19,72 +19,75 @@
 %%
 %% ----------------------------------------------------------------------------
 
--module(erlubi_vertex, [ID]).
+-module(erlubi_vertex).
 
--export([id/0, color/1, shape/1, shapedetail/1, label/1, size/1, fontfamily/1,
-        fontcolor/1, fontsize/1, visible/1, remove/0]).
+-export([new/1, id/1, color/2, shape/2, shapedetail/2, label/2, size/2, fontfamily/2,
+        fontcolor/2, fontsize/2, visible/2, remove/1]).
 
-id() ->
+new(ID) ->
+    {?MODULE, [ID]}.
+
+id({?MODULE, [ID]}) ->
     ID.
 
-remove() ->
+remove({?MODULE, [ID]}) ->
     erlubi:callv('ubigraph.remove_vertex', [ID]).
 
-set(Att,Value) ->
+set(Att, Value, {?MODULE, [ID]}) ->
     erlubi:callv('ubigraph.set_vertex_attribute',
                  [ID,
                   erlubi_util:to_string(Att),
                   erlubi_util:to_string(Value)]).
 
-color(Color) ->
-    set("color", erlubi_util:color_string(Color)).
+color(Color, {?MODULE, [_ID]}=THIS) ->
+    set("color", erlubi_util:color_string(Color), THIS).
 
-shape(cone) ->
-    set("shape", "cone");
-shape(cube) ->
-    set("shape", "cube");
-shape(dodecahedron) ->
-    set("shape", "dodecahedron");
-shape(icosahedron) ->
-    set("shape", "icosahedron");
-shape(octahedron) ->
-    set("shape", "octahedron");
-shape(sphere) ->
-    set("shape", "sphere");
-shape(torus) ->
-    set("shape", "torus");
-shape(none) ->
-    set("shape", "none").
+shape(cone, {?MODULE, [_ID]}=THIS) ->
+    set("shape", "cone", THIS);
+shape(cube, {?MODULE, [_ID]}=THIS) ->
+    set("shape", "cube", THIS);
+shape(dodecahedron, {?MODULE, [_ID]}=THIS) ->
+    set("shape", "dodecahedron", THIS);
+shape(icosahedron, {?MODULE, [_ID]}=THIS) ->
+    set("shape", "icosahedron", THIS);
+shape(octahedron, {?MODULE, [_ID]}=THIS) ->
+    set("shape", "octahedron", THIS);
+shape(sphere, {?MODULE, [_ID]}=THIS) ->
+    set("shape", "sphere", THIS);
+shape(torus, {?MODULE, [_ID]}=THIS) ->
+    set("shape", "torus", THIS);
+shape(none, {?MODULE, [_ID]}=THIS) ->
+    set("shape", "none", THIS).
 
-shapedetail(N) when N >= 0 ->
-    set("shapedetail", N).
+shapedetail(N, {?MODULE, [_ID]}=THIS) when N >= 0 ->
+    set("shapedetail", N, THIS).
 
-label(Text) when is_list(Text) ->
-    set("label", Text);
-label(Any) ->
-    set("label", Any).
+label(Text, {?MODULE, [_ID]}=THIS) when is_list(Text) ->
+    set("label", Text, THIS);
+label(Any, {?MODULE, [_ID]}=THIS) ->
+    set("label", Any, THIS).
 
-size(Size) when is_number(Size) ->
-    set("size", Size).
+size(Size, {?MODULE, [_ID]}=THIS) when is_number(Size) ->
+    set("size", Size, THIS).
 
-fontfamily(times) ->
-    set("fontfamily", "Times Roman");
-fontfamily(helvetica) ->
-    set("fontfamily", "Helvetica").
-
-
-fontcolor(Color) ->
-    set("fontcolor", erlubi_util:color_string(Color)).
+fontfamily(times, {?MODULE, [_ID]}=THIS) ->
+    set("fontfamily", "Times Roman", THIS);
+fontfamily(helvetica, {?MODULE, [_ID]}=THIS) ->
+    set("fontfamily", "Helvetica", THIS).
 
 
-fontsize(N) when is_integer(N) ->
-    set("fontsize", N).
+fontcolor(Color, {?MODULE, [_ID]}=THIS) ->
+    set("fontcolor", erlubi_util:color_string(Color), THIS).
 
 
-visible(true) ->
-    set("visible", "true");
-visible(false) ->
-    set("visible", "false").
+fontsize(N, {?MODULE, [_ID]}=THIS) when is_integer(N) ->
+    set("fontsize", N, THIS).
+
+
+visible(true, {?MODULE, [_ID]}=THIS) ->
+    set("visible", "true", THIS);
+visible(false, {?MODULE, [_ID]}=THIS) ->
+    set("visible", "false", THIS).
 
 
 
