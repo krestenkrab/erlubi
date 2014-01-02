@@ -56,6 +56,8 @@ stroke(solid, {?MODULE, [_ID]}=THIS) ->
     set("stroke", "solid", THIS);
 stroke(dashed, {?MODULE, [_ID]}=THIS) ->
     set("stroke", "dashed", THIS);
+stroke(dotted, {?MODULE, [_ID]}=THIS) ->
+    set("stroke", "dotted", THIS);
 stroke(none, {?MODULE, [_ID]}=THIS) ->
     set("stroke", "none", THIS).
 
