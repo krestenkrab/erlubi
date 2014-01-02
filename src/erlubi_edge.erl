@@ -24,6 +24,7 @@
 -export([new/1, id/1]).
 
 -export([remove/1, arrow/2, arrow_position/2, spline/2, stroke/2, visible/2]).
+-export([oriented/2]).
 
 new(ID) ->
     {?MODULE, [ID]}.
@@ -61,6 +62,5 @@ stroke(none, {?MODULE, [_ID]}=THIS) ->
 visible(Boolean, {?MODULE, [_ID]}=THIS) when is_boolean(Boolean) ->
     set("visible", Boolean, THIS).
 
-
-
-
+oriented(Boolean, {?MODULE, [_ID]}=THIS) when is_boolean(Boolean) ->
+    set("oriented", Boolean, THIS).
