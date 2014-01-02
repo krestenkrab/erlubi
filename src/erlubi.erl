@@ -25,7 +25,7 @@
 -behaviour(gen_server).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
--export([start/0, start/1, call/2, callv/2, stop/0]).
+-export([start/0, start/1, start_link/0, start_link/1, call/2, callv/2, stop/0]).
 
 -export([clear/0, vertex/0, edge/2,
          remove_vertex/1, remove_edge/1]).
@@ -44,7 +44,13 @@ start() ->
     start("127.0.0.1").
 
 start(Host) ->
-  gen_server:start({local, ?MODULE}, ?MODULE, [Host,20738], []).
+  gen_server:start({local, ?MODULE}, ?MODULE, [Host, 20738], []).
+
+start_link() ->
+    start_link("127.0.0.1").
+
+start_link(Host) ->
+  gen_server:start_link({local, ?MODULE}, ?MODULE, [Host, 20738], []).
 
 call(Method,Args) ->
     case gen_server:call(?MODULE, {call, Method, Args}, 10000) of
@@ -88,8 +94,8 @@ remove_edge({erlubi_edge, E}) ->
 %% Server implementation, a.k.a.: callbacks
 
 init([Host,Port]) ->
-  io:format("init", []),
-  {ok, #state{ host=Host, port=Port }}.
+    %% io:format("init", []),
+    {ok, #state{ host=Host, port=Port }}.
 
 handle_call(stop, _From, State) ->
   {stop, normal, stopped, State};
