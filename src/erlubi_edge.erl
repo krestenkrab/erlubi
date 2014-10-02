@@ -24,6 +24,7 @@
 -export([new/1, id/1]).
 
 -export([remove/1, arrow/2, arrow_position/2, spline/2, stroke/2, visible/2]).
+-export([oriented/2]).
 
 new(ID) ->
     {?MODULE, [ID]}.
@@ -55,12 +56,13 @@ stroke(solid, {?MODULE, [_ID]}=THIS) ->
     set("stroke", "solid", THIS);
 stroke(dashed, {?MODULE, [_ID]}=THIS) ->
     set("stroke", "dashed", THIS);
+stroke(dotted, {?MODULE, [_ID]}=THIS) ->
+    set("stroke", "dotted", THIS);
 stroke(none, {?MODULE, [_ID]}=THIS) ->
     set("stroke", "none", THIS).
 
 visible(Boolean, {?MODULE, [_ID]}=THIS) when is_boolean(Boolean) ->
     set("visible", Boolean, THIS).
 
-
-
-
+oriented(Boolean, {?MODULE, [_ID]}=THIS) when is_boolean(Boolean) ->
+    set("oriented", Boolean, THIS).
